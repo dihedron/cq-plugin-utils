@@ -1,7 +1,6 @@
 package xformutils
 
 import (
-	"log"
 	"reflect"
 	"strings"
 
@@ -19,7 +18,7 @@ const (
 // TagNameTransformer checks if a struct field is annotated with a "cq-name" tag
 // and if so uses its value as the name of the column in the generated schema.
 func TagNameTransformer(field reflect.StructField) (string, error) {
-	log.Printf("name transformer: %v\n", field)
+	// log.Printf("name transformer: %v\n", field)
 	if cq := field.Tag.Get(NameTag); cq != "" {
 		return cq, nil
 	}
@@ -29,7 +28,7 @@ func TagNameTransformer(field reflect.StructField) (string, error) {
 // TagTypeTransformer checks if a struct field is annotated with a "cq-type" tag
 // and if so uses its value as the type of the column in the generated schema.
 func TagTypeTransformer(field reflect.StructField) (schema.ValueType, error) {
-	log.Printf("type transformer: %v\n", field)
+	// log.Printf("type transformer: %v\n", field)
 	if cq := field.Tag.Get(TypeTag); cq != "" {
 		switch strings.ToLower(cq) {
 		case "bool", "boolean":
