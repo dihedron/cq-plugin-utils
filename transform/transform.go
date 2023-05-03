@@ -37,9 +37,9 @@ func Apply(transforms ...Transform) schema.ColumnResolver {
 	}
 }
 
-// GetObjectField gets the value from a Golang object by extracting
+// OnObjectField gets the value from a Golang object by extracting
 // the value associated with the field as per the path.
-func GetObjectField(path string) Transform {
+func OnObjectField(path string) Transform {
 	return func(ctx context.Context, _ schema.ClientMeta, r *schema.Resource, _ schema.Column, _ any) (any, error) {
 		value := funk.Get(r.Item, path, funk.WithAllowZero())
 		return value, nil
@@ -57,6 +57,15 @@ func AssertType[T any]() Transform {
 			return nil, fmt.Errorf("invalid data type: expected %T, got %T", t, v)
 		}
 		return v, nil
+	}
+}
+
+// GetElementAt gets the n-th element from a slice; it returns an error
+// if the value is not an array.
+func GetElementAt(n int) Transform {
+	return func(ctx context.Context, _ schema.ClientMeta, r *schema.Resource, _ schema.Column, v any) (any, error) {
+		value := funk.ElementAt(v, n)
+		return value, nil
 	}
 }
 
