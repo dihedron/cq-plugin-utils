@@ -170,6 +170,26 @@ func ToInt() Transform {
 	}
 }
 
+// ToBool converts the current value into its bool representation.
+func ToBool() Transform {
+	return func(ctx context.Context, _ schema.ClientMeta, _ *schema.Resource, _ schema.Column, v any) (any, error) {
+		if v == nil {
+			return nil, nil
+		}
+		switch v := v.(type) {
+		case bool:
+			return v, nil
+		case string:
+			if strings.TrimSpace(v) != "" {
+				return strconv.ParseBool(v)
+			}
+			return v, nil
+		default:
+			return nil, fmt.Errorf("incompatible type: %T", v)
+		}
+	}
+}
+
 // OrDefault sets the current value to the given default value
 // if it is nil.
 func OrDefault(value any) Transform {
