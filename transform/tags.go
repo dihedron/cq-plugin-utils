@@ -4,8 +4,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/cloudquery/plugin-sdk/schema"
-	"github.com/cloudquery/plugin-sdk/transformers"
+	"github.com/apache/arrow/go/v13/arrow"
+	"github.com/cloudquery/plugin-sdk/v4/transformers"
+	"github.com/cloudquery/plugin-sdk/v4/types"
 )
 
 const (
@@ -22,54 +23,69 @@ func TagNameTransformer(field reflect.StructField) (string, error) {
 	if cq := field.Tag.Get(NameTag); cq != "" {
 		return cq, nil
 	}
+
 	return transformers.DefaultNameTransformer(field)
 }
 
 // TagTypeTransformer checks if a struct field is annotated with a "cq-type" tag
 // and if so uses its value as the type of the column in the generated schema.
-func TagTypeTransformer(field reflect.StructField) (schema.ValueType, error) {
+func TagTypeTransformer(field reflect.StructField) (arrow.DataType, error) {
 	// log.Printf("type transformer: %v\n", field)
 	if cq := field.Tag.Get(TypeTag); cq != "" {
 		switch strings.ToLower(cq) {
-		case "bool", "boolean":
-			return schema.TypeBool, nil
-		case "int", "integer":
-			return schema.TypeInt, nil
+
+		case "bool":
+			return arrow.FixedWidthTypes.Boolean, nil
+		case "int":
+			return arrow.PrimitiveTypes.Int64, nil
 		case "float":
-			return schema.TypeFloat, nil
+			return arrow.PrimitiveTypes.Float64, nil
 		case "uuid":
-			return schema.TypeUUID, nil
+			return types.ExtensionTypes.UUID, nil
 		case "string":
-			return schema.TypeString, nil
-		case "byte-array", "[]byte", "bytearray":
-			return schema.TypeByteArray, nil
-		case "string-array", "[]string", "stringarray":
-			return schema.TypeStringArray, nil
-		case "int-array", "[]int", "intarray":
-			return schema.TypeIntArray, nil
+			return arrow.BinaryTypes.String, nil
+		case "[]byte":
+			return arrow.BinaryTypes.Binary, nil
+		case "[]string":
+			return arrow.ListOf(arrow.BinaryTypes.String), nil
+		case "[]int":
+			return arrow.ListOf(arrow.PrimitiveTypes.Int64), nil
 		case "timestamp":
-			return schema.TypeTimestamp, nil
+			return arrow.FixedWidthTypes.Timestamp_us, nil
 		case "json":
-			return schema.TypeJSON, nil
-		case "uuid-array", "[]uuid", "uuidarray":
-			return schema.TypeUUIDArray, nil
+			return types.ExtensionTypes.JSON, nil
+		case "[]uuid":
+			return arrow.ListOf(types.ExtensionTypes.UUID), nil
 		case "inet":
-			return schema.TypeInet, nil
-		case "inet-array", "[]inet", "inetarray":
-			return schema.TypeInetArray, nil
+			return types.ExtensionTypes.Inet, nil
+		case "[]inet":
+			return arrow.ListOf(types.ExtensionTypes.Inet), nil
 		case "cidr":
-			return schema.TypeCIDR, nil
-		case "cidr-array", "[]cidr", "cidrarray":
-			return schema.TypeCIDRArray, nil
-		case "mac", "mac-addr", "mac-address":
-			return schema.TypeMacAddr, nil
-		case "mac-array", "mac-addr-array", "mac-address-array", "[]mac", "[]mac-addr", "[]mac-address":
-			return schema.TypeMacAddrArray, nil
-		case "time-interval":
-			return schema.TypeTimeIntervalDeprecated, nil
-		case "end":
-			return schema.TypeEnd, nil
+			return types.ExtensionTypes.Inet, nil
+		case "[]cidr":
+			return arrow.ListOf(types.ExtensionTypes.Inet), nil
+		case "mac", "macaddr":
+			return types.ExtensionTypes.MAC, nil
+		case "[]mac", "[]Macaddr":
+			return arrow.ListOf(types.ExtensionTypes.MAC), nil
 		}
 	}
 	return transformers.DefaultTypeTransformer(field)
 }
+
+// var defaultCaser = caser.New()
+
+// func DefaultNameTransformer(field reflect.StructField) (string, error) {
+// 	name := field.Name
+// 	if jsonTag := strings.Split(field.Tag.Get("json"), ",")[0]; len(jsonTag) > 0 {
+// 		// return empty string if the field is not related api response
+// 		if jsonTag == "-" {
+// 			return "", nil
+// 		}
+// 		if nameFromJSONTag := defaultCaser.ToSnake(jsonTag); schema.ValidColumnName(nameFromJSONTag) {
+// 			return nameFromJSONTag, nil
+// 		}
+// 	}
+// 	return defaultCaser.ToSnake(name), nil
+// }
+// */
