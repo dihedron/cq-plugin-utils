@@ -4,7 +4,7 @@ go 1.21.1
 
 require (
 	github.com/apache/arrow/go/v15 v15.0.0
-	github.com/cloudquery/plugin-sdk/v4 v4.27.1
+	github.com/cloudquery/plugin-sdk/v4 v4.29.1
 	github.com/thoas/go-funk v0.9.3
 )
 
