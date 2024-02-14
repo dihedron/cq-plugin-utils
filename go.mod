@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/apache/arrow/go/v15 v15.0.0
 	github.com/cloudquery/plugin-sdk/v4 v4.29.1
+	github.com/gobwas/glob v0.2.3
 	github.com/thoas/go-funk v0.9.3
 )
 
@@ -16,7 +17,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3 // indirect
+	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a // indirect
 	golang.org/x/mod v0.15.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
