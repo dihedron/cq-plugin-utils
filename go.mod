@@ -1,10 +1,10 @@
 module github.com/dihedron/cq-plugin-utils
 
-go 1.21.1
+go 1.22.0
 
 require (
 	github.com/apache/arrow/go/v15 v15.0.0
-	github.com/cloudquery/plugin-sdk/v4 v4.29.1
+	github.com/cloudquery/plugin-sdk/v4 v4.30.0
 	github.com/gobwas/glob v0.2.3
 	github.com/thoas/go-funk v0.9.3
 )
@@ -15,9 +15,9 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a // indirect
+	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
 	golang.org/x/mod v0.15.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
