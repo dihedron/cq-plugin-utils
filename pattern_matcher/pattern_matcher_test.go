@@ -2,12 +2,14 @@ package pattern_matcher
 
 import (
 	"testing"
+
+	"github.com/gobwas/glob"
 )
 
 func TestPatternMatcher(t *testing.T) {
 	type fields struct {
-		include []string
-		exclude []string
+		include_patterns []glob.Glob
+		exclude_patterns []glob.Glob
 	}
 	tests := []struct {
 		name   string
@@ -18,8 +20,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_1",
 			fields{
-				include: []string{"*"},
-				exclude: []string{},
+				include_patterns: []glob.Glob{glob.MustCompile("*")},
+				exclude_patterns: []glob.Glob{},
 			},
 			"hello_world",
 			true,
@@ -27,8 +29,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_2",
 			fields{
-				include: []string{"*"},
-				exclude: []string{"hello*"},
+				include_patterns: []glob.Glob{glob.MustCompile("*")},
+				exclude_patterns: []glob.Glob{glob.MustCompile("hello*")},
 			},
 			"hello_world",
 			false,
@@ -36,8 +38,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_3",
 			fields{
-				include: []string{"*"},
-				exclude: []string{"hello*"},
+				include_patterns: []glob.Glob{glob.MustCompile("*")},
+				exclude_patterns: []glob.Glob{glob.MustCompile("hello*")},
 			},
 			"hi_world",
 			true,
@@ -45,8 +47,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_4",
 			fields{
-				include: []string{"hello"},
-				exclude: []string{"*"},
+				include_patterns: []glob.Glob{glob.MustCompile("hello")},
+				exclude_patterns: []glob.Glob{glob.MustCompile("*")},
 			},
 			"hello",
 			false,
@@ -54,8 +56,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_5",
 			fields{
-				include: []string{"openstack_nova*", "openstack_cinder*"},
-				exclude: []string{"openstack_cinder_attachment*"},
+				include_patterns: []glob.Glob{glob.MustCompile("openstack_nova*"), glob.MustCompile("openstack_cinder*")},
+				exclude_patterns: []glob.Glob{glob.MustCompile("openstack_cinder_attachment*")},
 			},
 			"openstack_cinder_attachments",
 			false,
@@ -64,8 +66,8 @@ func TestPatternMatcher(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			pm := &PatternMatcher{
-				include: tt.fields.include,
-				exclude: tt.fields.exclude,
+				include_patterns: tt.fields.include_patterns,
+				exclude_patterns: tt.fields.exclude_patterns,
 			}
 			if got := pm.Match(tt.value); got != tt.want {
 				t.Errorf("Match() = %v, want %v", got, tt.want)
