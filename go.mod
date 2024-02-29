@@ -4,8 +4,9 @@ go 1.22.0
 
 require (
 	github.com/apache/arrow/go/v15 v15.0.0
-	github.com/cloudquery/plugin-sdk/v4 v4.30.0
+	github.com/cloudquery/plugin-sdk/v4 v4.32.0
 	github.com/gobwas/glob v0.2.3
+	github.com/rs/zerolog v1.32.0
 	github.com/thoas/go-funk v0.9.3
 )
 
@@ -16,6 +17,8 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
 	golang.org/x/mod v0.15.0 // indirect
