@@ -2,14 +2,12 @@ package pattern_matcher
 
 import (
 	"testing"
-
-	"github.com/gobwas/glob"
 )
 
 func TestPatternMatcher(t *testing.T) {
 	type fields struct {
-		include_patterns []glob.Glob
-		exclude_patterns []glob.Glob
+		include_patterns []string
+		exclude_patterns []string
 	}
 	tests := []struct {
 		name   string
@@ -20,8 +18,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_1",
 			fields{
-				include_patterns: []glob.Glob{glob.MustCompile("*")},
-				exclude_patterns: []glob.Glob{},
+				include_patterns: []string{"*"},
+				exclude_patterns: []string{},
 			},
 			"hello_world",
 			true,
@@ -29,8 +27,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_2",
 			fields{
-				include_patterns: []glob.Glob{glob.MustCompile("*")},
-				exclude_patterns: []glob.Glob{glob.MustCompile("hello*")},
+				include_patterns: []string{"*"},
+				exclude_patterns: []string{"hello*"},
 			},
 			"hello_world",
 			false,
@@ -38,8 +36,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_3",
 			fields{
-				include_patterns: []glob.Glob{glob.MustCompile("*")},
-				exclude_patterns: []glob.Glob{glob.MustCompile("hello*")},
+				include_patterns: []string{"*"},
+				exclude_patterns: []string{"hello*"},
 			},
 			"hi_world",
 			true,
@@ -47,8 +45,8 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_4",
 			fields{
-				include_patterns: []glob.Glob{glob.MustCompile("hello")},
-				exclude_patterns: []glob.Glob{glob.MustCompile("*")},
+				include_patterns: []string{"hello"},
+				exclude_patterns: []string{"*"},
 			},
 			"hello",
 			false,
@@ -56,19 +54,28 @@ func TestPatternMatcher(t *testing.T) {
 		{
 			"test_5",
 			fields{
-				include_patterns: []glob.Glob{glob.MustCompile("openstack_nova*"), glob.MustCompile("openstack_cinder*")},
-				exclude_patterns: []glob.Glob{glob.MustCompile("openstack_cinder_attachment*")},
+				include_patterns: []string{"openstack_nova*", "openstack_cinder*"},
+				exclude_patterns: []string{"openstack_cinder_attachment*"},
 			},
 			"openstack_cinder_attachments",
 			false,
 		},
+		{
+			"test_6",
+			fields{
+				include_patterns: []string{"openstack*"},
+				exclude_patterns: []string{"openstack_identity*"},
+			},
+			"openstack_cinder_attachments",
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pm := &PatternMatcher{
-				include_patterns: tt.fields.include_patterns,
-				exclude_patterns: tt.fields.exclude_patterns,
-			}
+			pm := New(
+				WithReplaceIncludes(tt.fields.include_patterns),
+				WithReplaceExcludes(tt.fields.exclude_patterns),
+			)
 			if got := pm.Match(tt.value); got != tt.want {
 				t.Errorf("Match() = %v, want %v", got, tt.want)
 			}
