@@ -38,8 +38,9 @@ func Replace(list []string, is_include bool) Option {
 				patterns = append(patterns, g)
 			}
 			if len(patterns) > 0 {
-				c.include_patterns = patterns
-				if !is_include {
+				if is_include {
+					c.include_patterns = patterns
+				} else {
 					c.exclude_patterns = patterns
 				}
 			}			
@@ -53,6 +54,14 @@ func WithReplaceIncludes(list []string) Option {
 
 func WithReplaceExcludes(list []string) Option {
 	return Replace(list, false)
+}
+
+func (pm *PatternMatcher) IncludePatterns() []glob.Glob {
+	return pm.include_patterns
+}
+
+func (pm *PatternMatcher) ExcludePatterns() []glob.Glob {
+	return pm.exclude_patterns
 }
 
 func (pm *PatternMatcher) Match(value string) bool {
