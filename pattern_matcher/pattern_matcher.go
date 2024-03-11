@@ -28,20 +28,20 @@ func New(options ...Option) *PatternMatcher {
 func Replace(list []string, is_include bool) Option {
 	return func(c *PatternMatcher) {
 		if len(list) > 0 {
-			patterns := []glob.Glob{}
+			globs := []glob.Glob{}
 			for _, pattern := range list {
 				g, err := glob.Compile(pattern)
 				if err != nil {
 					log.Error().Err(err).Msgf("Error compiling pattern %s", pattern)
 					continue
 				}
-				patterns = append(patterns, g)
+				globs = append(globs, g)
 			}
-			if len(patterns) > 0 {
+			if len(globs) > 0 {
 				if is_include {
-					c.include_patterns = patterns
+					c.include_patterns = globs
 				} else {
-					c.exclude_patterns = patterns
+					c.exclude_patterns = globs
 				}
 			}			
 		}
